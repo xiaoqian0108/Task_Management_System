@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>更新Event</title>
+</head>
+<body>
+    <h1>更新Event</h1>
+    <form action="/tasks/update_event/" method="post">
+        {% csrf_token %}
+        <label for="events">請選擇一個你要更新的Event：</label>
+        <br>
+        {% for event in events %}
+            <p>
+                <input type="radio" class="event-radio" name="event_id" value="{{ event.id }}">
+                {{ event.name }} - {{ event.label }} - {{ event.date }}
+            </p>
+        {% endfor %}
+        <br>
+        <label for="event_name">更新Event名稱</label>
+        <input type="text" name="event_name" id="event_name"><br>
+        <label for="event_label">更新Event標籤</label>
+        <input type="text" name="event_label" id="event_label"><br>
+        <label for="event_date">更新Event日期</label>
+        <input type="date" name="event_date" id="event_date"><br>
+        <input type="submit" value="更新Event">
+    </form>
+    <br><a href="/tasks/">返回Event列表</a>
+</body>
+</html>

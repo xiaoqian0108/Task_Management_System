@@ -1,0 +1,52 @@
+<!-- create_event.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>創建新的Event</title>
+</head>
+<body>
+    <h1>創建新的Event</h1>
+    <form action="/tasks/create_event/" method="post">
+        {% csrf_token %}
+        <label for="event_name">Event名稱</label>
+        <input type="text" name="event_name" id="event_name"><br>
+        <label for="event_label">Event標籤</label>
+        <input type="text" name="event_label" id="event_label"><br>
+        <label for="event_date">Event日期</label>
+        <input type="date" name="event_date" id="event_date"><br>
+        <input type="submit" value="創建Event">
+    </form>
+
+    <h2>查詢</h2>
+    <form action="/tasks/search/" method="get">
+        <input type="text" name="event_label" id="search-input" placeholder="輸入查詢內容">
+        <button id="search-button">搜索</button><br><br>
+    </form>
+
+    <form action="/tasks/toupdate_event/" method="post">
+        {% csrf_token %}
+        <div style="display: flex; align-items: center;">
+            <h3 style="margin-right: 10px;">顯示更新頁面</h3>
+            <button type="submit">跳轉</button>
+        </div>
+    </form>
+
+    <form action="/tasks/todelete_event/" method="post">
+        {% csrf_token %}
+        <div style="display: flex; align-items: center;">
+            <h3 style="margin-right: 10px;">顯示删除頁面</h3>
+            <button type="submit">跳轉</button>
+        </div>
+    </form>
+
+    <form action="/tasks/categories/" method="post">
+        {% csrf_token %}
+        <div style="display: flex; align-items: center;">
+            <h3 style="margin-right: 10px;">顯示分類頁面</h3>
+            <button type="submit">跳轉</button>
+        </div>
+    </form>
+
+</body>
+</html>

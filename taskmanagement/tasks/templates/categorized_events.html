@@ -1,0 +1,20 @@
+<!-- categorized_events.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分類Event</title>
+</head>
+<body>
+    <h1>分類表</h1>
+        {% for label, events in categorized_events.items %}
+            <h2>{{ label }}</h2>
+            <ul>
+                {% for event in events %}
+                    <li>{{ event.name }} - {{ event.date }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+</body>
+</html>
+

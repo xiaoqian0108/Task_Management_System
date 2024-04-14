@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>删除Event</title>
+</head>
+<body>
+    <h1>Delete Event</h1>
+    <form action="/tasks/delete_event/" method="post">
+        {% csrf_token %}
+        <label for="events">已新增的Event:</label>
+        {% for event in events %}
+            <p>
+                <input type="checkbox" name="events" value="{{ event.id }}">
+                {{ event.name }} - {{ event.label }} - {{ event.date }}
+            </p>
+        {% endfor %}
+        <input type="submit" value="删除Event">
+    </form>
+</body>
+</html>
