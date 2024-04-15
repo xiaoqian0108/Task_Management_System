@@ -1,13 +1,22 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from . models import Event
-from collections import defaultdict
-
 
 # Create your views here.
-class EventManager:
+class JumpToPage:
+    @staticmethod
+    def get_all_events():
+        return Event.objects.all()
     def tocreate_event(request):
         return render(request, 'create_event.html')
+    def toupdate_event(request):
+        events = JumpToPage.get_all_events()
+        return render(request, 'update_event.html', {'events': events})
+    def todelete_event(request):
+        events = JumpToPage.get_all_events()
+        return render(request, 'delete_event.html', {'events': events})
+
+class EventManager:
     @staticmethod
     def create_event(request):
         if request.method == 'POST':
@@ -22,11 +31,6 @@ class EventManager:
         else:
             pass
 
-    def toupdate_event(request):
-        events = Event.objects.all()
-        return render(request, 'update_event.html', {'events': events})
-
-    @staticmethod
     def update_event(request):
         if request.method == 'POST':
             name = request.POST.get('event_name')
@@ -50,21 +54,18 @@ class EventManager:
         else:
             return HttpResponse("修改失敗！")
 
-    def todelete_event(request):
-        events = Event.objects.all()
-        return render(request, 'delete_event.html', {'events': events})
-
-    @staticmethod
     def delete_event(request):
         if request.method == 'POST':
             event_ids = request.POST.getlist('events') #取得checkbox的id
-            for event_id in event_ids:
-                Event.objects.filter(id=event_id).delete()
-            return HttpResponse("选定的事件已成功删除")
+            if event_ids:
+                for event_id in event_ids:
+                    Event.objects.filter(id=event_id).delete()
+                return HttpResponse("已成功删除")
+            else:
+                return HttpResponse("删除失敗！")
         else:
             pass
 
-    @staticmethod
     def categorized_events(request):
         labels = Event.objects.values_list('label', flat=True).distinct()
         categorized_events = {}
@@ -73,16 +74,18 @@ class EventManager:
             categorized_events[label] = events
         return render(request, 'categorized_events.html', {'categorized_events': categorized_events})
 
-    @staticmethod
     def search_events(request):
         if request.method == 'GET':
             search_label = request.GET.get('event_label')
-            events = Event.objects.filter(label__icontains=search_label)
-            if events:
-                response = "<br>".join([f"{event.name} - {event.label} - {event.date}" for event in events])
-                return HttpResponse(response)
+            if search_label:
+                events = Event.objects.filter(label__icontains=search_label)
+                if events:
+                    response = "<br>".join([f"{event.name} - {event.label} - {event.date}" for event in events])
+                    return HttpResponse(response)
+                else:
+                    return HttpResponse("沒有找到！請重新輪入")
             else:
-                return HttpResponse("查詢欄為空白！請重新查詢")
+                return HttpResponse("空白內容！")
         else:
             pass
 
