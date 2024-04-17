@@ -1,18 +1,20 @@
 # Task Management System
 ## 紀錄
-- 0329: http://127.0.0.1:8000/tasks/
+- 0329 by Sophie: http://127.0.0.1:8000/tasks/
 
 - 0415 by Siowan
     1.  DB建立 由於Event需要DataBase存放數據，所以我用MySQL新增了一個DataBase，並且把db.sqlite3(Django內建的DB)的內容遷移到Django_SQL.sql
         [SQL 使用MySQL 8.3.0]
         - <__init__.py>
+            ```
             import pymysql
             pymysql.install_as_MySQLdb()
+            ```
             ->  將pymysql視為MySQLdb，使Django能夠正確地與MySQL數據庫進行交互。
                     原因：Django中使用MySQL數據庫時，Django的某些部分預期導入的是MySQLdb庫，但在Python3 中，MySQLdb 庫不再被廣泛支持。
-        -   遷移指令：    
-                python manage.py makemigrations (APP_NAME)
-                python manage.py migrate
+        -   遷移指令：  
+                `python manage.py makemigrations (APP_NAME)`
+                `python manage.py migrate`
         - <tasksmanagement/setting.py> 修改
             -   在INSTALLED_APPS的list中加入我們APP（tasks）-> 告訴 Django在專案中包含這個應用程式，Django就會相應地加載和管理它。
             
@@ -46,19 +48,18 @@
                     可以點擊checkbox選擇Event，在對應想修改內容的輸入框填寫新資訊，按下按鈕即可（僅單選），這裏只要輸入至少一個輸入框也可以修改對應資訊，若三個輸入框皆無填寫則網頁回應會顯示失敗訊息
         - <tasks/views.py>
             -   創建一個Class名為JumpToPage -> 實作跳轉頁面
-                1.  tocreate_event(request): 跳轉到/tasks/
-                2.  toupdate_event(request): 跳轉到/tasks/update_event
-                3.  todelete_event(request): 跳轉到/tasks/delete_event 
-                4.  get_all_events(): 由於toupdate_event和todelete_event均使用了重複的函式去提取相同的Event，故在Class內直接定義一個Method實作提取資料的動作，這樣可使程式更容易維護
-            -   創建一個Class名為EventManager -> 實作所有和Event管理相關的動作
-            Method：
-                1.  create_event(request): 
+                1.  `tocreate_event(request)`: 跳轉到/tasks/
+                2.  `toupdate_event(request)`: 跳轉到/tasks/update_event
+                3.  `todelete_event(request)`: 跳轉到/tasks/delete_event 
+                4.  `get_all_events()`: 由於toupdate_event和todelete_event均使用了重複的函式去提取相同的Event，故在Class內直接定義一個Method實作提取資料的動作，這樣可使程式更容易維護
+            -   創建一個Class名為EventManager -> 實作所有和Event管理相關的動作Method：
+                1.  `create_event(request)`: 
                     目的：新增Event的Object並存到資料庫中
                     利用POST拿到首頁填寫創建Event的三項Data並賦值給name, label, date
                     進行邏輯判斷看三個Data是否都不為空
                     如果都不為空則把新創一個object到Event Class內，並且返回成功訊息
                     如果變數皆為空，則返回失敗的訊息。
-                2.  update_event(request):
+                2.  `update_event(request)`:
                     目的：負責接收用戶提交的事件更新數據，將更新應用到數據庫中的相應事件，並返回相應的成功或失敗訊息給用戶
                     實作方法：
                     利用POST拿到更新Event頁面填寫創建Event的三項Data並賦值給name, label, date，並且還獲取事件的 ID
@@ -66,26 +67,43 @@
                     如果至少一個不為空則通過事件的ID從數據庫中獲取相應的事件對象，
                     這裏使用get_object_or_404函數從資料庫中查詢指定ID的事件，如果找不到對應的事件，則返回 404 錯誤頁面，若找到則更新對應的Data並返回成功訊息
                     如果變數皆為空，則返回失敗的訊息
-                3.  delete_event(request): 
+                3.  `delete_event(request)`: 
                     目的：實現了根據用戶提交的事件 ID，刪除數據庫中對應的事件的功能
                     實作方法：
                     利用POST拿到删除頁面中checkbox被選擇的events的id列表
-                    遍歷這些Events的id，並根據每個id使用Event.objects.filter(id=event_id).delete()來從資料庫中刪除相應的事件
+                    遍歷這些Events的id，並根據每個id使用`Event.objects.filter(id=event_id).delete()`來從資料庫中刪除相應的事件
                     刪除操作完成後返回成功訊息
                     如果請求的方法不是POST，則直接返回，不執行任何操作
-                4.  categorized_events(request):
+                4.  `categorized_events(request)`:
                     目的：按標籤（Label）分類事件並在網頁上顯示
                     實作方法：
-                    通過Event.objects.values_list('label', flat=True).distinct()從數據庫中獲取所有不重複的標籤(label) 列表
+                    通過`Event.objects.values_list('label', flat=True).distinct()`從數據庫中獲取所有不重複的標籤(label) 列表
                     創建了一個空字典categorized_events來存儲按標籤分類後的事件
                     之後再遍歷每個不重複的標籤，並將該標籤對應的事件過濾出來，存儲在 categorized_events中
                     分類好的事件傳遞給categorized_events.html，並將其作為 categorized_events的值，以供html使用。
-                5.  search_events(request):
+                5.  `search_events(request)`:
                     目的：根據標籤(label) 進行事件搜索並在網頁上顯示搜索結果
                     實作方法：
                     利用GET取得在查詢輸入框所填寫的event_label
-                    使用Event.objects.filter(label__icontains=search_label)從數據庫中過濾具有包含搜索標籤的事件
+                    使用`Event.objects.filter(label__icontains=search_label)`從數據庫中過濾具有包含搜索標籤的事件
                     檢查是否有符合搜索標籤的事件
                     如果有符合，則使用列表推導式將搜索結果中每個事件的名稱、標籤和日期格式化為字符串，並使用<br>標籤連接起來，最後將其作為HTTP響應返回。
                     如果沒有符合搜索標籤的事件，則返回失敗訊息
                     如果請求方法不是GET，則什麼也不做
+
+- 0417 by Sophie
+    1. DB修改 : 由於Event增加新欄位Description作為備註，在migrate後資料庫更新為Django_SQL_0417.sql
+    2. code修改
+        - <tasks/urls.py> : 同上
+        - <tasks/models.py>
+            - Data：description是Event的備註說明
+        - <tasks/template>
+            - 首頁增加列出所有Event，方便之後修改個別Event，之後可整合到周檢視頁面
+            - 列表頁面 : list_event.html
+            - 查看/修改備註頁面 : event_detail.html
+        - <tasks/views.py>
+            - 在EventManager新增兩Method
+            1. `list_event(request)` : 列出所有行程，無排序。點選查看，可進入個別Event備註頁面
+            2. `update_event_detail(request, event_id)` : 可查看及更新備註內容
+
+        

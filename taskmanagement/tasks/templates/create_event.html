@@ -48,5 +48,13 @@
         </div>
     </form>
 
+    <form action="/tasks/list_event/" method="post">
+        {% csrf_token %}
+        <div style="display: flex; align-items: center;">
+            <h3 style="margin-right: 10px;">顯示列表頁面</h3>
+            <button type="submit">跳轉</button>
+        </div>
+    </form>
+
 </body>
 </html>

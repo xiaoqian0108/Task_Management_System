@@ -1,0 +1,19 @@
+<!-- events/templates/events/event_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ event.name }}</title>
+</head>
+<body>
+    <!-- update event detail -->
+    <h1>{{ event.name }}</h1>
+    <p>{{ event.label }} - {{ event.date }}</p>
+    <form action="{% url 'event-detail' event.id %}" method="post">
+        {% csrf_token %}
+        <label for="event_description">Event備註</label>
+        <input type="text" name="event_description" id="event_description" value="{{ event.description }}"><br>
+        <input type="submit" value="更新備註">
+    </form>
+</body>
+</html>

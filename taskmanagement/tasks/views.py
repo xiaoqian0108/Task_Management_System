@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
+from django import forms
 from . models import Event
 
 # Create your views here.
@@ -15,6 +16,7 @@ class JumpToPage:
     def todelete_event(request):
         events = JumpToPage.get_all_events()
         return render(request, 'delete_event.html', {'events': events})
+    
 
 class EventManager:
     @staticmethod
@@ -88,7 +90,20 @@ class EventManager:
                 return HttpResponse("空白內容！")
         else:
             pass
-
+            
+    def list_event(request):
+        events = Event.objects.all()
+        return render(request, 'list_event.html', {'events': events})
+    
+    def update_event_detail(request, event_id):
+        if request.method == 'POST':
+            event = get_object_or_404(Event, pk=event_id)
+            event.description = request.POST.get('event_description')
+            event.save()
+            return HttpResponse("更新成功！")
+        else:
+            event = get_object_or_404(Event, pk=event_id)
+            return render(request, 'event_detail.html', {'event': event})
 
 
 

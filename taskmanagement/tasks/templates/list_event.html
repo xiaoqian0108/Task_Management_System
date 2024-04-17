@@ -1,0 +1,17 @@
+<!-- list_event.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>列出所有Event</title>
+</head>
+<body>
+    <h1>列表</h1>
+    <ul>
+        {% for event in events %}
+            <li>{{ event.name }} - {{ event.label }} - {{ event.date }}</li>
+            <a href="{% url 'event-detail' event.id %}">查看</a>
+        {% endfor %}
+    </ul>
+</body>
+</html>
