@@ -61,5 +61,13 @@
         </div>
     </form>
 
+    <form action="/tasks/week_events/" method="post">
+        {% csrf_token %}
+        <div style="display: flex; align-items: center;">
+            <h3 style="margin-right: 10px;">週檢視</h3>
+            <button type="submit">跳轉</button>
+        </div>
+    </form>
+
 </body>
 </html>
