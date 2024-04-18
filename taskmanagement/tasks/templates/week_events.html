@@ -1,0 +1,21 @@
+<!-- week_events.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week Events</title>
+</head>
+<body>
+    <h1>Week Events</h1>
+    {% for week_data in weeks_data %}
+    <h2>{{ week_data.week_title }}</h2>
+    <ul>
+        {% for event in week_data.events %}
+        <li>{{ event.date }} - {{ event.name }}</li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+</body>
+</html>

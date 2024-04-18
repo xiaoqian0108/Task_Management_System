@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django import forms
 from . models import Event
+from datetime import datetime
+from .week_events import WeekEvents
 
 # Create your views here.
 class JumpToPage:
@@ -105,6 +107,23 @@ class EventManager:
             event = get_object_or_404(Event, pk=event_id)
             return render(request, 'event_detail.html', {'event': event})
 
+    def week_events(request):
+        current_date = datetime.now().date()
+        all_events = Event.objects.all().order_by('date')
 
+        events_by_week = {}
+        for event in all_events:
+            week_number = WeekEvents.get_week_number(event.date)
+            if week_number not in events_by_week:
+                events_by_week[week_number] = []
+            events_by_week[week_number].append(event)
+
+        weeks_data = []
+        for week_number, events in events_by_week.items():
+            week_start, week_end = WeekEvents.get_week_range_for_number(current_date.year, week_number)
+            week_title = f"{week_start.strftime('%Y/%m/%d')} - {week_end.strftime('%Y/%m/%d')}"
+            weeks_data.append({'week_title': week_title, 'events': events})
+
+        return render(request, 'week_events.html', {'weeks_data': weeks_data})
 
 

@@ -13,5 +13,6 @@ urlpatterns = [
     path('categories/', views.EventManager.categorized_events),
     path('search/', views.EventManager.search_events),
     path('list_event/', views.EventManager.list_event),
+    path('week_events/', views.EventManager.week_events),
     path('event/<int:event_id>/', views.EventManager.update_event_detail, name='event-detail'),
 ]
