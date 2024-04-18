@@ -114,4 +114,12 @@
         - <tasks/templates/register.html>
         - <tasks/auth_views.py>
 
-        
+-0419 by xiaoqian
+    1. code修改
+        - <tasks/urls.py> : 增加week_events的path
+        - <tasks/views.py>
+            - 在EventManager新增一個Method
+            1. `week_events(request)`： 獲取所有Event進行日期的排序，並分類到其所屬的週
+    2. tasks目錄下新增
+        - <tasks/templates/week_events.html>
+        - <tasks/week_events.py>
