@@ -1,31 +1,3 @@
-'''
-from datetime import timedelta
-
-class WeekEvents:
-    def __init__(self, start_date, end_date):
-        self.start_date = start_date
-        self.end_date = end_date
-        self.events = []
-
-    def add_event(self, event):
-        # 確保事件在這一周內
-        if self.start_date <= event.date <= self.end_date:
-            self.events.append(event)
-
-    def sort_events(self):
-        self.events.sort(key=lambda x: x.date)
-
-    def get_events(self):
-        return self.events
-
-    @staticmethod
-    def get_week_range(date):
-        # 找到一周的第一天（星期一）
-        start_date = date - timedelta(days=date.weekday())
-        # 找到一周的最後一天（星期日）
-        end_date = start_date + timedelta(days=6)
-        return start_date, end_date
-'''
 from datetime import timedelta, datetime
 
 class WeekEvents:
